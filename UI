@@ -1,0 +1,197 @@
+load 'repository.rb'
+
+def hg(command = nil,args=nil)
+
+	command = ARGV.shift()
+	args = ARGV
+
+	#create
+	if command == "create"
+		if args == []
+#			return "created" #dummy code for unit test			
+			repo = Repository.new(".",1)
+			puts("Succesfully created")
+		else
+#			return "wrong arguments" #dummy code for unit test				
+			puts("Wrong number of arguments, given: #{args.length}, expected: 0")
+		end
+	else
+		repo =Repository.new()
+	end
+
+	#checkout
+	if command == "checkout"		
+		c = Changelog.new(repo)
+		rev = c.tip()
+
+		if args!=[]
+#			return "checked out" #dummy code for unit test			
+			rev = Integer(args[0])
+		else 
+#			return "wrong arguments" #dummy code for unit test			
+			puts("Wrong number of arguments, given: #{args.length}, expected: multiples")
+		end
+
+		repo.checkout(rev)
+		puts("Success")
+	end
+
+	#add
+	if command == "add"
+		if args != []
+#			return "added" #dummy code for unit test
+			repo.add(args)
+			puts("Successfully added")
+		else
+#			return "wrong arguments" #dummy code for unit test
+			puts("Wrong number of arguments, given: 0, expected: multiples")
+		end	
+	end
+
+	#delete
+	if command == "delete"	
+		if args != []
+#			return "deleted" #dummy code for unit test
+			repo.delete(args)
+			puts("Successfully deleted")
+		else
+#			return "wrong arguments" #dummy code for unit test			
+			puts("Wrong number of arguments, given: 0, expected: multiples")
+		end	
+	end	
+
+	#commit
+	if command == "commit"	
+		if args ==[]
+#			return "committed" #dummy code for unit test			
+			repo.commit()
+			puts("Successfully committed")
+		else
+#			return "wrong arguments" #dummy code for unit test			
+			puts("Wrong number of arguments, given: #{args.length}, expected: 0")
+		end		
+	end
+
+	#stat
+	if command == "stat"
+#		return "stat" #dummy code for unit test	
+		if args ==[]	
+			repo.diffdir()
+		else
+#		return "wrong arguments" #dummy code for unit test				
+			puts("Wrong number of arguments, given: #{args.length}, expected: 0")
+		end	
+	end
+
+	#index
+	if command == "index"
+
+		if args.length == 0
+#		return "wrong arguments" #dummy code for unit test			
+			puts("Wrong number of arguments, given: #{args.length}, expected: multiples")
+		end
+
+#		return "index" #dummy code for unit test
+		f = args[0]
+		revs = Filelog.new(repo,f)
+		tip = revs.tip()
+
+		for i in (0..tip)
+			parents = revs.parents(i)
+			p1 = parents[0]
+			p2 = parents[1]
+
+			formatter1 = "%d: %d %d %s"
+			print formatter1 % [
+				i,
+				p1,
+				p2,
+				revs.node(i)
+			]
+
+			formatter2 = " offset %d len %d base %d"
+			print formatter2 % [
+				revs.start(i),
+				revs.length(i)+64+4,
+				revs.base(i)
+			]
+
+
+		end
+
+	end
+
+	#history	
+	if command == "history"
+		
+		if args.length != 0
+#			return "wrong arguments" #dummy code for unit test			
+			puts("Wrong number of arguments, given: #{args.length}, expected: 0")
+		end
+
+#		return "history" #dummy code for unit test
+		c = Changelog.new(repo)
+		tip = c.tip()
+		for i in (0..tip)
+			changes = c.changeset2(i)
+			# p changes
+			# # p "+++++++++++++++++++++"
+			# changes.each do |e|
+			# 	p e
+			# 	p "======================================"
+			# end
+			# formatter1 = "%d: %d %d %s"
+
+			#"=================================================="
+			# formatter1 = "%d:  %s"
+			# print formatter1 % [
+			# 	i,
+			# 	# p1,
+			# 	# p2,
+			# 	c.node(i)
+			# ]			
+			print("\nmanifest nodeid: ")
+			print(changes[0])
+			print ("\nuser:")
+			print(changes[1])
+			print("\nchanged date:")
+			print(changes[2])
+			print ("\nchanged files are:") 
+
+			for f in changes[3]
+				print(" ",f)
+			end
+
+			print("\ndescription:")
+			print(changes[4])
+
+		end
+
+	end	
+
+	if command == "merge"
+# 		if args.length == 0
+# #			return "wrong arguments" #dummy code for unit test			
+# 			puts("Wrong number of arguments, given: 0, expected: 1")
+# 		end
+		other = Repository.new(args[0])
+		repo.merge(other)
+		puts("Successfully merged")
+	end	
+
+	if command == "help"
+		puts('VALID COMMANDS：')
+		puts('"create"')
+		puts('"checkout"')
+		puts('"add"')
+		puts('"delete"')
+		puts('"commit"')
+		puts('"merge"')
+		puts('"stat"')
+		puts('"index"')
+		puts('"history"')
+	end	
+
+end
+
+hg()
