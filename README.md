@@ -11,15 +11,20 @@ Ruby is required.
 There are five people in this group.
 
 1.Yupeng Gou
+
 2.Guangda luo
+
 3.Lisi Luo
+
 4.Ruguo Lin
+
 5.Ning Gu
 
 
 My role is the quality asurance and project lead, I was in charge of group coordination and integration testing between modules. I also contributes to the repository.rb file.
 
 Yupeng Gou
+
 University of Rochester
 
 The following is some instructions on how to use the commands.
@@ -47,7 +52,7 @@ e.g: ruby UI checkout 0
 6. stat
 expected number of arguments: 0
 e.g: ruby UI stat
-#display status of files in current directory, C => file changed.
+display status of files in current directory, C => file changed.
 
 7. index
 expected number of arguments: 1 (a filename)
