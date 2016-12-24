@@ -27,7 +27,7 @@ Yupeng Gou
 
 University of Rochester
 
-The following is some instructions on how to use the commands.
+#Some instructions on how to use the commands.
 
 1. create
 expected number of arguments: 0
